@@ -26,7 +26,7 @@ enum AnalogPort {
  */
 //% color=190 icon="\uf126" block= "BitTest"
 //% groups="['Analog', 'Digital', 'I2C']"
-namespace BitMaker {
+namespace BitTest {
     /**
     * read the value of a digital input
      */
