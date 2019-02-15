@@ -22,9 +22,9 @@ enum AnalogPort {
 
 
 /**
- * Provides access to BitMaker for micro: bit functionality.
+ * Provides access to BitTest blocks for micro: bit functionality.
  */
-//% color=190 icon="\uf126" block= "BitMaker"
+//% color=190 icon="\uf126" block= "BitTest"
 //% groups="['Analog', 'Digital', 'I2C']"
 namespace BitMaker {
     /**
