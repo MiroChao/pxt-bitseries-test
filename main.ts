@@ -42,7 +42,6 @@ namespace BitTest {
         high: boolean;
         Ain: number;
         Aout: number;
-
         select_grove_port(isReadWrite: boolean) {
             if (isReadWrite == true) {
                 if (this.grove == GrovePort.P0) {
