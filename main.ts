@@ -134,11 +134,10 @@ namespace BitTest {
         //% Din.fieldOptions.width=200
         //% Din.fieldOptions.columns=3
         //% group="Digital"
-        read_Din_value(): number {
-            let Din_stat: number;
+        read_Din_value(grove: GrovePort): number {
+            grove = this.grove;
             this.select_grove_port(true);
-            Din_stat = this.Din;
-            return Din_stat;
+            return this.Din;
         }
     }
 }
