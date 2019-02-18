@@ -112,7 +112,8 @@ namespace BitTest {
                 } else if (this.analogIO == AnalogPort.P2) {
                     this.Ain = pins.analogReadPin(AnalogPin.P2);
                 }
-            }
+            } 
+
             //write value to specified analog pin
             else if (mode == 1) {
                 if (this.analogIO == AnalogPort.P0) {
@@ -122,7 +123,8 @@ namespace BitTest {
                 } else if (this.analogIO == AnalogPort.P2) {
                     pins.analogWritePin(AnalogPin.P2, this.Aout);
                 }
-            }
+            } 
+
             // set pwm pusle at specified analog pin
             else if (mode == 2) {
                 if (this.analogIO == AnalogPort.P0) {
