@@ -99,36 +99,6 @@ namespace BitTest {
         * read the value of a digital input
         */
         //% blockId=read_Din_value
-        //% block="digital read pin $Din"
-        //% Din.fieldEditor="gridpicker"
-        //% Din.fieldOptions.width=200
-        //% Din.fieldOptions.columns=3
-        //% group="Digital"
-        /**measureInCentimeters(pin: DigitalPin): number {
-            let duration = 0;
-            let RangeInCentimeters = 0;
-
-            pins.digitalWritePin(pin, 0);
-            control.waitMicros(2);
-            pins.digitalWritePin(pin, 1);
-            control.waitMicros(20);
-            pins.digitalWritePin(pin, 0);
-            duration = pins.pulseIn(pin, PulseValue.High, 50000); // Max duration 50 ms
-
-            RangeInCentimeters = duration * 153 / 29 / 2 / 100;
-
-            if (RangeInCentimeters > 0) distanceBackup = RangeInCentimeters;
-            else RangeInCentimeters = distanceBackup;
-
-            basic.pause(50);
-
-            return RangeInCentimeters;
-        }/
-
-        /**
-        * read the value of a digital input
-        */
-        //% blockId=read_Din_value
         //% block="digital read pin $grove"
         //% Din.fieldEditor="gridpicker"
         //% Din.fieldOptions.width=200
@@ -138,6 +108,28 @@ namespace BitTest {
             grove = this.grove;
             this.select_grove_port(true);
             return this.Din;
+        }
+
+        /**
+         * read the status of a digital input
+         */
+        //% blockId=read_Din_status
+        //% block="digital pin $Din| is %high"
+        //% Din.fieldEditor="gridpicker"
+        //% Din.fieldOptions.width=200
+        //% Din.fieldOptions.columns=3
+        //% high.shadow="toggleHighLow"
+        //% high.defl="true"
+        //% group="Digital"
+        //% weight=10
+        read_Din_status(grove: GrovePort, high:boolean): boolean {
+            grove = this.grove;
+            this.select_grove_port(true);
+            if ((high == true && this.Din == 1) || (high == false && this.Din == 0)) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 }
