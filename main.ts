@@ -129,7 +129,7 @@ namespace BitTest {
         * read the value of a digital input
         */
         //% blockId=read_Din_value
-        //% block="digital read pin $this.grove"
+        //% block="digital read pin $grove"
         //% Din.fieldEditor="gridpicker"
         //% Din.fieldOptions.width=200
         //% Din.fieldOptions.columns=3
