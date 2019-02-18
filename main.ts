@@ -105,7 +105,7 @@ namespace BitTest {
         //% Din.fieldOptions.columns=3
         //% group="Digital"
         read_Din_value(grove: GrovePort): number {
-            grove = this.grove;
+            this.grove = grove;
             this.select_grove_port(true);
             return this.Din;
         }
@@ -114,7 +114,7 @@ namespace BitTest {
          * read the status of a digital input
          */
         //% blockId=read_Din_status
-        //% block="digital pin $Din| is %high"
+        //% block="digital pin $grove| is $high"
         //% Din.fieldEditor="gridpicker"
         //% Din.fieldOptions.width=200
         //% Din.fieldOptions.columns=3
@@ -122,8 +122,8 @@ namespace BitTest {
         //% high.defl="true"
         //% group="Digital"
         //% weight=10
-        read_Din_status(grove: GrovePort, high:boolean): boolean {
-            grove = this.grove;
+        read_Din_status(grove: GrovePort, high: boolean): boolean {
+            this.grove = grove;
             this.select_grove_port(true);
             if ((high == true && this.Din == 1) || (high == false && this.Din == 0)) {
                 return true;
@@ -132,4 +132,6 @@ namespace BitTest {
             }
         }
     }
+
+
 }
