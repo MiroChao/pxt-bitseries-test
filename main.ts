@@ -136,7 +136,7 @@ namespace BitTest {
         * set the status of a digital output to high or low
         */
         //% blockId=set_Dout
-        //% block="set digital pin $Dout| to %high"
+        //% block="set digital pin $Dout| to $high"
         //% Dout.fieldEditor="gridpicker"
         //% Dout.fieldOptions.width=200
         //% Dout.fieldOptions.columns=3
