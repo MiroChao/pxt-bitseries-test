@@ -33,7 +33,7 @@ enum DistanceUnit {
 //% color=190 icon="\uf126" block= "BitTest"
 //% groups="['Analog', 'Digital', 'I2C', 'Grove Modules']"
 namespace BitTest {
-    export class dosomthing {
+    export class dosomthingwithPins {
         grove: GrovePort;
         analogIO: AnalogPort;
         unit: DistanceUnit;
@@ -43,7 +43,9 @@ namespace BitTest {
         Ain: number;
         Aout: number;
         PWMvalue: number;
+        durationPulse: number;
 
+        //call this function to read from or write to digital pins
         select_grove_port(mode: number) {
             //read from specified digital pin
             if (mode == 0) {
@@ -58,7 +60,7 @@ namespace BitTest {
                 } else if (this.grove == GrovePort.P16) {
                     this.Din = pins.digitalReadPin(DigitalPin.P16);
                 }
-            } 
+            }
             //write to specified digital pin
             else if (mode == 1) {
                 if (this.high == true) {
@@ -78,8 +80,28 @@ namespace BitTest {
                     pins.digitalWritePin(DigitalPin.P16, this.Dout);
                 }
             }
+            //get the duration of a pulse at a specified digital pin
+            else if (mode == 2) {
+                if (this.high == true) {
+                    this.Dout = 1;
+                } else {
+                    this.Dout = 0;
+                }
+                if (this.grove == GrovePort.P0) {
+                    this.durationPulse = pins.pulseIn(DigitalPin.P0, PulseValue.High, 50000); // Max duration 50 ms;
+                } else if (this.grove == GrovePort.P1) {
+                    this.durationPulse = pins.pulseIn(DigitalPin.P0, PulseValue.High, 50000);
+                } else if (this.grove == GrovePort.P2) {
+                    pins.digitalWritePin(DigitalPin.P2, this.Dout);
+                } else if (this.grove == GrovePort.P8) {
+                    pins.digitalWritePin(DigitalPin.P8, this.Dout);
+                } else if (this.grove == GrovePort.P16) {
+                    pins.digitalWritePin(DigitalPin.P16, this.Dout);
+                }
+            }
         }
 
+        //call this function to read from or write to analog pins
         select_analog_port(mode: number) {
             //read from specified analog pin
             if (mode == 0) {
@@ -91,6 +113,7 @@ namespace BitTest {
                     this.Ain = pins.analogReadPin(AnalogPin.P2);
                 }
             } 
+
             //write value to specified analog pin
             else if (mode == 1) {
                 if (this.analogIO == AnalogPort.P0) {
@@ -101,6 +124,7 @@ namespace BitTest {
                     pins.analogWritePin(AnalogPin.P2, this.Aout);
                 }
             } 
+
             // set pwm pusle at specified analog pin
             else if (mode == 2) {
                 if (this.analogIO == AnalogPort.P0) {
@@ -111,6 +135,54 @@ namespace BitTest {
                     pins.analogSetPeriod(AnalogPin.P2, this.PWMvalue);
                 }
             }
+        }
+
+        /**
+        * read the value of a digital input
+        */
+        //% blockId=measureInCentimeters
+        //% block="Ultrasonic Sensor at $grove| distance in $Unit"
+        //% grove.fieldEditor="gridpicker"
+        //% grove.fieldOptions.width=200
+        //% grove.fieldOptions.columns=3
+        //% group="Grove Modules"
+        //% weight=100
+        measureInCentimeters(grove: GrovePort, Unit: DistanceUnit): number {
+            let duration = 0;
+            let distance = 0;
+            let distanceBackup = 0;
+
+            this.grove = grove;
+
+            this.high = false;
+            this.select_grove_port(1);
+            control.waitMicros(2);
+            this.high = true;
+            this.select_grove_port(1);
+            control.waitMicros(10);
+            this.high = false;
+            this.select_grove_port(1);
+
+            if (this.grove == GrovePort.P0) {
+                duration = pins.pulseIn(DigitalPin.P0, PulseValue.High, 50000); // Max duration 50 ms;
+            } else if (this.grove == GrovePort.P1) {
+                duration = pins.pulseIn(DigitalPin.P1, PulseValue.High, 50000);
+            } else if (this.grove == GrovePort.P2) {
+                duration = pins.pulseIn(DigitalPin.P2, PulseValue.High, 50000);
+            } else if (this.grove == GrovePort.P8) {
+                duration = pins.pulseIn(DigitalPin.P8, PulseValue.High, 50000);
+            } else if (this.grove == GrovePort.P16) {
+                duration = pins.pulseIn(DigitalPin.P16, PulseValue.High, 50000);
+            }
+
+            if (Unit == DistanceUnit.cm) distance = duration * 153/58/100;
+            else distance = duration * 153/148/100;
+
+            if (distance > 0) distanceBackup = distance;
+            else distance = distanceBackup;
+            basic.pause(50);
+
+            return distance;
         }
 
         /**
