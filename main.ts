@@ -42,6 +42,8 @@ namespace BitTest {
         high: boolean;
         Ain: number;
         Aout: number;
+        PWMvalue:number;
+
         select_grove_port(isReadWrite: boolean) {
             if (isReadWrite == true) {
                 if (this.grove == GrovePort.P0) {
@@ -75,8 +77,9 @@ namespace BitTest {
             }
         }
 
-        select_analog_port(isRead: boolean) {
-            if (isRead == true) {
+        select_analog_port(mode: number) {
+            //read from specified analog pin
+            if (mode == 0) {
                 if (this.analogIO == AnalogPort.P0) {
                     this.Ain = pins.analogReadPin(AnalogPin.P0);
                 } else if (this.analogIO == AnalogPort.P1) {
@@ -84,13 +87,23 @@ namespace BitTest {
                 } else if (this.analogIO == AnalogPort.P2) {
                     this.Ain = pins.analogReadPin(AnalogPin.P2);
                 }
-            } if (isRead == false) {
+            //write value to specified analog pin
+            } else if (mode == 1) {
                 if (this.analogIO == AnalogPort.P0) {
                     pins.analogWritePin(AnalogPin.P0, this.Aout);
                 } else if (this.analogIO == AnalogPort.P1) {
                     pins.analogWritePin(AnalogPin.P1, this.Aout);
                 } else if (this.analogIO == AnalogPort.P2) {
                     pins.analogWritePin(AnalogPin.P2, this.Aout);
+                }
+            // set pwm pusle at specified analog pin
+            } else if (mode == 2) {
+                if (this.analogIO == AnalogPort.P0) {
+                    pins.analogSetPeriod(AnalogPin.P0, this.PWMvalue);
+                } else if (this.analogIO == AnalogPort.P1) {
+                    pins.analogSetPeriod(AnalogPin.P1, this.PWMvalue);
+                } else if (this.analogIO == AnalogPort.P2) {
+                    pins.analogSetPeriod(AnalogPin.P2, this.PWMvalue);
                 }
             }
         }
@@ -115,9 +128,9 @@ namespace BitTest {
          */
         //% blockId=read_Din_status
         //% block="digital pin $grove| is $high"
-        //% Din.fieldEditor="gridpicker"
-        //% Din.fieldOptions.width=200
-        //% Din.fieldOptions.columns=3
+        //% grove.fieldEditor="gridpicker"
+        //% grove.fieldOptions.width=200
+        //% grove.fieldOptions.columns=3
         //% high.shadow="toggleHighLow"
         //% high.defl="true"
         //% group="Digital"
@@ -136,10 +149,10 @@ namespace BitTest {
         * set the status of a digital output to high or low
         */
         //% blockId=set_Dout
-        //% block="set digital pin $Dout| to %high"
-        //% Dout.fieldEditor="gridpicker"
-        //% Dout.fieldOptions.width=200
-        //% Dout.fieldOptions.columns=3
+        //% block="set digital pin $grove| to $high"
+        //% grove.fieldEditor="gridpicker"
+        //% grove.fieldOptions.width=200
+        //% grove.fieldOptions.columns=3
         //% high.shadow="toggleHighLow"
         //% high.defl="true"
         //% group="Digital"
@@ -149,7 +162,102 @@ namespace BitTest {
             this.high = high;
             this.select_grove_port(false);
         }
+
+        /**
+        * read the analog inputs
+        */
+        //% blockId=read_Ain
+        //% block="analog read pin $analogIO"
+        //% analogIO.fieldEditor="gridpicker"
+        //% analogIO.fieldOptions.width=200
+        //% analogIO.fieldOptions.columns=3
+        //% group="Analog"
+        //% weight=50
+        read_Ain(analogIO: AnalogPort): number {
+            this.analogIO = analogIO;
+            this.select_analog_port(0);
+            return this.Ain;
+        }
+
+        /**
+        * read the analog inputs and convert the value to the specified range
+        */
+        //% blockId=convert_Ain
+        //% block="map pin $analogIO|to low $low_value|high $high_value"
+        //% analogIO.fieldEditor="gridpicker"
+        //% analogIO.fieldOptions.width=200
+        //% analogIO.fieldOptions.columns=3
+        //% group="Analog"
+        //% weight=40
+        convert_Ain(analogIO: AnalogPort, low_value: number, high_value: number): number {
+            this.analogIO = analogIO;
+            this.select_analog_port(0);
+            return Math.map(this.Ain, 0, 1023, low_value, high_value);
+        }
+
+        /**
+        * write value to the analog ports
+        */
+        //% blockId=write_analog
+        //% block="analog write pin $analogIO| to $Aout"
+        //% analogIO.fieldEditor="gridpicker"
+        //% analogIO.fieldOptions.width=200
+        //% analogIO.fieldOptions.columns=3
+        //% Aout.min=0 value.max=1023
+        //% Aout.defl=1023
+        //% group="Analog"
+        //% weight=30
+        write_analog(analogIO: AnalogPort, Aout: number) {
+            this.analogIO = analogIO;
+            this.Aout = Aout;
+            this.select_analog_port(1);
+        }
+
+        /**
+        * Configure the period of Pulse Width Modulation (PWM) on the specified analog pin to a given value in "microseconds". Before you call this function, you should set the specified pin as analog output using "analog write pin".
+        */
+        //% blockId=config_PWM
+        //% block="analog set period pin $analogIO|(PWM) to (us) $PWMvalue"
+        //% analogIO.fieldEditor="gridpicker"
+        //% analogIO.fieldOptions.width=200
+        //% analogIO.fieldOptions.columns=3
+        //% PWMvalue.defl=20000
+        //% group="Analog"
+        //% weight=20
+        config_PWM(analogIO: AnalogPort, PWMvalue: number) {
+            this.analogIO = analogIO;
+            this.PWMvalue = PWMvalue;
+            this.select_analog_port(2);
+        }
+
+        /**
+        * Read one number to a 7-bit address
+        */
+        //% blockId=read_i2c
+        //% block="i2c read number at address $add|of format $format|repeated $yes"
+        //% format.fieldEditor="gridpicker"
+        //% format.fieldOptions.width=200
+        //% format.fieldOptions.columns=4
+        //% yes.shadow="toggleYesNo"
+        //% group="I2C"
+        //% inlineInputMode=inline
+        read_i2c(add: number, format: NumberFormat, yes: boolean): number {
+            return pins.i2cReadNumber(add, format, yes)
+        }
+
+        /**
+        * Write one number to a 7-bit address
+        */
+        //% blockId=write_i2c
+        //% block="i2c wrtie number $|at address $add|with value $value|of format $format|repeated $yes"
+        //% format.fieldEditor="gridpicker"
+        //% format.fieldOptions.width=200
+        //% format.fieldOptions.columns=4
+        //% yes.shadow="toggleYesNo"
+        //% group="I2C"
+        //% weight=40
+        write_i2c(add: number, value: number, format: NumberFormat, yes: boolean) {
+            pins.i2cWriteNumber(add, value, format, yes)
+        }
     }
-
-
 }
