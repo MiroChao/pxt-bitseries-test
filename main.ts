@@ -33,7 +33,7 @@ enum DistanceUnit {
 //% color=190 icon="\uf126" block= "BitTest"
 //% groups="['Analog', 'Digital', 'I2C', 'Grove Modules']"
 namespace BitTest {
-    export class dosomthing {
+    export class dosomthingwithPins {
         grove: GrovePort;
         analogIO: AnalogPort;
         unit: DistanceUnit;
@@ -43,9 +43,12 @@ namespace BitTest {
         Ain: number;
         Aout: number;
         PWMvalue: number;
+        durationPulse: number;
 
-        select_grove_port(isReadWrite: boolean) {
-            if (isReadWrite == true) {
+        //call this function to read from or write to digital pins
+        select_grove_port(mode: number) {
+            //read from specified digital pin
+            if (mode == 0) {
                 if (this.grove == GrovePort.P0) {
                     this.Din = pins.digitalReadPin(DigitalPin.P0);
                 } else if (this.grove == GrovePort.P1) {
@@ -57,7 +60,9 @@ namespace BitTest {
                 } else if (this.grove == GrovePort.P16) {
                     this.Din = pins.digitalReadPin(DigitalPin.P16);
                 }
-            } else if (isReadWrite == false) {
+            }
+            //write to specified digital pin
+            else if (mode == 1) {
                 if (this.high == true) {
                     this.Dout = 1;
                 } else {
@@ -75,8 +80,28 @@ namespace BitTest {
                     pins.digitalWritePin(DigitalPin.P16, this.Dout);
                 }
             }
+            //get the duration of a pulse at a specified digital pin
+            else if (mode == 2) {
+                if (this.high == true) {
+                    this.Dout = 1;
+                } else {
+                    this.Dout = 0;
+                }
+                if (this.grove == GrovePort.P0) {
+                    this.durationPulse = pins.pulseIn(DigitalPin.P0, PulseValue.High, 50000); // Max duration 50 ms;
+                } else if (this.grove == GrovePort.P1) {
+                    this.durationPulse = pins.pulseIn(DigitalPin.P0, PulseValue.High, 50000);
+                } else if (this.grove == GrovePort.P2) {
+                    pins.digitalWritePin(DigitalPin.P2, this.Dout);
+                } else if (this.grove == GrovePort.P8) {
+                    pins.digitalWritePin(DigitalPin.P8, this.Dout);
+                } else if (this.grove == GrovePort.P16) {
+                    pins.digitalWritePin(DigitalPin.P16, this.Dout);
+                }
+            }
         }
 
+        //call this function to read from or write to analog pins
         select_analog_port(mode: number) {
             //read from specified analog pin
             if (mode == 0) {
@@ -87,8 +112,9 @@ namespace BitTest {
                 } else if (this.analogIO == AnalogPort.P2) {
                     this.Ain = pins.analogReadPin(AnalogPin.P2);
                 }
-                //write value to specified analog pin
-            } else if (mode == 1) {
+            }
+            //write value to specified analog pin
+            else if (mode == 1) {
                 if (this.analogIO == AnalogPort.P0) {
                     pins.analogWritePin(AnalogPin.P0, this.Aout);
                 } else if (this.analogIO == AnalogPort.P1) {
@@ -96,8 +122,9 @@ namespace BitTest {
                 } else if (this.analogIO == AnalogPort.P2) {
                     pins.analogWritePin(AnalogPin.P2, this.Aout);
                 }
-                // set pwm pusle at specified analog pin
-            } else if (mode == 2) {
+            }
+            // set pwm pusle at specified analog pin
+            else if (mode == 2) {
                 if (this.analogIO == AnalogPort.P0) {
                     pins.analogSetPeriod(AnalogPin.P0, this.PWMvalue);
                 } else if (this.analogIO == AnalogPort.P1) {
@@ -111,6 +138,54 @@ namespace BitTest {
         /**
         * read the value of a digital input
         */
+        //% blockId=measureInCentimeters
+        //% block="Ultrasonic Sensor at $grove| distance in $Unit"
+        //% grove.fieldEditor="gridpicker"
+        //% grove.fieldOptions.width=200
+        //% grove.fieldOptions.columns=3
+        //% group="Grove Modules"
+        //% weight=100
+        measureInCentimeters(grove: GrovePort, Unit: DistanceUnit): number {
+            let duration = 0;
+            let distance = 0;
+            let distanceBackup = 0;
+
+            this.grove = grove;
+
+            this.high = false;
+            this.select_grove_port(1);
+            control.waitMicros(2);
+            this.high = true;
+            this.select_grove_port(1);
+            control.waitMicros(10);
+            this.high = false;
+            this.select_grove_port(1);
+
+            if (this.grove == GrovePort.P0) {
+                duration = pins.pulseIn(DigitalPin.P0, PulseValue.High, 50000); // Max duration 50 ms;
+            } else if (this.grove == GrovePort.P1) {
+                duration = pins.pulseIn(DigitalPin.P1, PulseValue.High, 50000);
+            } else if (this.grove == GrovePort.P2) {
+                duration = pins.pulseIn(DigitalPin.P2, PulseValue.High, 50000);
+            } else if (this.grove == GrovePort.P8) {
+                duration = pins.pulseIn(DigitalPin.P8, PulseValue.High, 50000);
+            } else if (this.grove == GrovePort.P16) {
+                duration = pins.pulseIn(DigitalPin.P16, PulseValue.High, 50000);
+            }
+
+            if (Unit == DistanceUnit.cm) distance = duration * 153/58/100;
+            else distance = duration * 153/148/100;
+
+            if (distance > 0) distanceBackup = distance;
+            else distance = distanceBackup;
+            basic.pause(50);
+
+            return distance;
+        }
+
+        /**
+        * read the value of a digital input
+        */
         //% blockId=read_Din_value
         //% block="digital read pin $grove"
         //% Din.fieldEditor="gridpicker"
@@ -119,7 +194,7 @@ namespace BitTest {
         //% group="Digital"
         read_Din_value(grove: GrovePort): number {
             this.grove = grove;
-            this.select_grove_port(true);
+            this.select_grove_port(0);
             return this.Din;
         }
 
@@ -137,7 +212,7 @@ namespace BitTest {
         //% weight=10
         read_Din_status(grove: GrovePort, high: boolean): boolean {
             this.grove = grove;
-            this.select_grove_port(true);
+            this.select_grove_port(0);
             if ((high == true && this.Din == 1) || (high == false && this.Din == 0)) {
                 return true;
             } else {
@@ -160,7 +235,7 @@ namespace BitTest {
         set_Dout(grove: GrovePort, high: boolean) {
             this.grove = grove;
             this.high = high;
-            this.select_grove_port(false);
+            this.select_grove_port(1);
         }
 
         /**
