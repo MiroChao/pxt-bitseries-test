@@ -44,8 +44,9 @@ namespace BitTest {
         Aout: number;
         PWMvalue: number;
 
-        select_grove_port(isReadWrite: boolean) {
-            if (isReadWrite == true) {
+        select_grove_port(mode: number) {
+            //read from specified digital pin
+            if (mode == 0) {
                 if (this.grove == GrovePort.P0) {
                     this.Din = pins.digitalReadPin(DigitalPin.P0);
                 } else if (this.grove == GrovePort.P1) {
@@ -57,7 +58,9 @@ namespace BitTest {
                 } else if (this.grove == GrovePort.P16) {
                     this.Din = pins.digitalReadPin(DigitalPin.P16);
                 }
-            } else if (isReadWrite == false) {
+            } 
+            //write to specified digital pin
+            else if (mode == 1) {
                 if (this.high == true) {
                     this.Dout = 1;
                 } else {
@@ -87,8 +90,9 @@ namespace BitTest {
                 } else if (this.analogIO == AnalogPort.P2) {
                     this.Ain = pins.analogReadPin(AnalogPin.P2);
                 }
-                //write value to specified analog pin
-            } else if (mode == 1) {
+            } 
+            //write value to specified analog pin
+            else if (mode == 1) {
                 if (this.analogIO == AnalogPort.P0) {
                     pins.analogWritePin(AnalogPin.P0, this.Aout);
                 } else if (this.analogIO == AnalogPort.P1) {
@@ -96,8 +100,9 @@ namespace BitTest {
                 } else if (this.analogIO == AnalogPort.P2) {
                     pins.analogWritePin(AnalogPin.P2, this.Aout);
                 }
-                // set pwm pusle at specified analog pin
-            } else if (mode == 2) {
+            } 
+            // set pwm pusle at specified analog pin
+            else if (mode == 2) {
                 if (this.analogIO == AnalogPort.P0) {
                     pins.analogSetPeriod(AnalogPin.P0, this.PWMvalue);
                 } else if (this.analogIO == AnalogPort.P1) {
@@ -119,7 +124,7 @@ namespace BitTest {
         //% group="Digital"
         read_Din_value(grove: GrovePort): number {
             this.grove = grove;
-            this.select_grove_port(true);
+            this.select_grove_port(0);
             return this.Din;
         }
 
@@ -137,7 +142,7 @@ namespace BitTest {
         //% weight=10
         read_Din_status(grove: GrovePort, high: boolean): boolean {
             this.grove = grove;
-            this.select_grove_port(true);
+            this.select_grove_port(0);
             if ((high == true && this.Din == 1) || (high == false && this.Din == 0)) {
                 return true;
             } else {
@@ -160,7 +165,7 @@ namespace BitTest {
         set_Dout(grove: GrovePort, high: boolean) {
             this.grove = grove;
             this.high = high;
-            this.select_grove_port(false);
+            this.select_grove_port(1);
         }
 
         /**
