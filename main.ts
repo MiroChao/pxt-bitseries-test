@@ -148,6 +148,8 @@ namespace BitTest {
     //% grove.fieldEditor="gridpicker"
     //% grove.fieldOptions.width=200
     //% grove.fieldOptions.columns=3
+    //% Unit.fieldEditor="gridpicker"
+    //% Unit.fieldOptions.width=200
     //% group="Grove Modules"
     //% weight=100
     export function measureInCentimeters(grove: GrovePort, Unit: DistanceUnit): number {
@@ -283,7 +285,7 @@ namespace BitTest {
     //% analogIO.fieldEditor="gridpicker"
     //% analogIO.fieldOptions.width=200
     //% analogIO.fieldOptions.columns=3
-    //% Aout.min=0 value.max=1023
+    //% Aout.min=0 Aout.max=1023
     //% Aout.defl=1023
     //% group="Analog"
     //% weight=30
