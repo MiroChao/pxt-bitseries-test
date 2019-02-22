@@ -285,13 +285,13 @@ namespace BitTest {
     //% analogIO.fieldEditor="gridpicker"
     //% analogIO.fieldOptions.width=200
     //% analogIO.fieldOptions.columns=3
-    //% Aout.min=0 Aout.max=1023
-    //% Aout.defl=1023
+    //% value.min=0 value.max=1023
+    //% value.defl=1023
     //% group="Analog"
     //% weight=30
-    export function write_analog(analogIO: AnalogPort, Aout: number) {
+    export function write_analog(analogIO: AnalogPort, value: number) {
         selectPins.analogIO = analogIO;
-        selectPins.Aout = Aout;
+        selectPins.Aout = value;
         selectPins.select_analog_port(1);
     }
 
