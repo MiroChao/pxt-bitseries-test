@@ -281,7 +281,7 @@ namespace BitTest {
     * write value to the analog ports
     */
     //% blockId=write_analog
-    //% block="analog write pin $analogIO| to $Aout"
+    //% block="analog write pin $analogIO| to $value"
     //% analogIO.fieldEditor="gridpicker"
     //% analogIO.fieldOptions.width=200
     //% analogIO.fieldOptions.columns=3
