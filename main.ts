@@ -138,7 +138,7 @@ namespace BitTest {
         }
     }
 
-    let selectPins: SelectPins;
+    let selectPins: SelectPins = new SelectPins;
 
     /**
     * read the value of a digital input
