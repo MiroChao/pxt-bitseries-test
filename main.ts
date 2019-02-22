@@ -33,7 +33,7 @@ enum DistanceUnit {
 //% color=190 icon="\uf126" block= "BitTest"
 //% groups="['Analog', 'Digital', 'I2C', 'Grove Modules']"
 namespace BitTest {
-    export class dosomthingwithPins {
+    export class SelectPins {
         grove: GrovePort;
         analogIO: AnalogPort;
         unit: DistanceUnit;
@@ -112,7 +112,7 @@ namespace BitTest {
                 } else if (this.analogIO == AnalogPort.P2) {
                     this.Ain = pins.analogReadPin(AnalogPin.P2);
                 }
-            } 
+            }
 
             //write value to specified analog pin
             else if (mode == 1) {
@@ -123,7 +123,7 @@ namespace BitTest {
                 } else if (this.analogIO == AnalogPort.P2) {
                     pins.analogWritePin(AnalogPin.P2, this.Aout);
                 }
-            } 
+            }
 
             // set pwm pusle at specified analog pin
             else if (mode == 2) {
@@ -136,176 +136,178 @@ namespace BitTest {
                 }
             }
         }
+    }
 
-        /**
-        * read the value of a digital input
-        */
-        //% blockId=measureInCentimeters
-        //% block="Ultrasonic Sensor at $grove| distance in $Unit"
-        //% grove.fieldEditor="gridpicker"
-        //% grove.fieldOptions.width=200
-        //% grove.fieldOptions.columns=3
-        //% group="Grove Modules"
-        //% weight=100
-        measureInCentimeters(grove: GrovePort, Unit: DistanceUnit): number {
-            let duration = 0;
-            let distance = 0;
-            let distanceBackup = 0;
+    let selectPins: SelectPins;
 
-            this.grove = grove;
+    /**
+    * read the value of a digital input
+    */
+    //% blockId=measureInCentimeters
+    //% block="Ultrasonic Sensor at $grove| distance in $Unit"
+    //% grove.fieldEditor="gridpicker"
+    //% grove.fieldOptions.width=200
+    //% grove.fieldOptions.columns=3
+    //% group="Grove Modules"
+    //% weight=100
+    export function measureInCentimeters(grove: GrovePort, Unit: DistanceUnit): number {
+        let duration = 0;
+        let distance = 0;
+        let distanceBackup = 0;
 
-            this.high = false;
-            this.select_grove_port(1);
-            control.waitMicros(2);
-            this.high = true;
-            this.select_grove_port(1);
-            control.waitMicros(10);
-            this.high = false;
-            this.select_grove_port(1);
+        selectPins.grove = grove;
 
-            if (this.grove == GrovePort.P0) {
-                duration = pins.pulseIn(DigitalPin.P0, PulseValue.High, 50000); // Max duration 50 ms;
-            } else if (this.grove == GrovePort.P1) {
-                duration = pins.pulseIn(DigitalPin.P1, PulseValue.High, 50000);
-            } else if (this.grove == GrovePort.P2) {
-                duration = pins.pulseIn(DigitalPin.P2, PulseValue.High, 50000);
-            } else if (this.grove == GrovePort.P8) {
-                duration = pins.pulseIn(DigitalPin.P8, PulseValue.High, 50000);
-            } else if (this.grove == GrovePort.P16) {
-                duration = pins.pulseIn(DigitalPin.P16, PulseValue.High, 50000);
-            }
+        selectPins.high = false;
+        selectPins.select_grove_port(1);
+        control.waitMicros(2);
+        selectPins.high = true;
+        selectPins.select_grove_port(1);
+        control.waitMicros(10);
+        selectPins.high = false;
+        selectPins.select_grove_port(1);
 
-            if (Unit == DistanceUnit.cm) distance = duration * 153/58/100;
-            else distance = duration * 153/148/100;
-
-            if (distance > 0) distanceBackup = distance;
-            else distance = distanceBackup;
-            basic.pause(50);
-
-            return distance;
+        if (selectPins.grove == GrovePort.P0) {
+            duration = pins.pulseIn(DigitalPin.P0, PulseValue.High, 50000); // Max duration 50 ms;
+        } else if (selectPins.grove == GrovePort.P1) {
+            duration = pins.pulseIn(DigitalPin.P1, PulseValue.High, 50000);
+        } else if (selectPins.grove == GrovePort.P2) {
+            duration = pins.pulseIn(DigitalPin.P2, PulseValue.High, 50000);
+        } else if (selectPins.grove == GrovePort.P8) {
+            duration = pins.pulseIn(DigitalPin.P8, PulseValue.High, 50000);
+        } else if (selectPins.grove == GrovePort.P16) {
+            duration = pins.pulseIn(DigitalPin.P16, PulseValue.High, 50000);
         }
 
-        /**
-        * read the value of a digital input
-        */
-        //% blockId=read_Din_value
-        //% block="digital read pin $grove"
-        //% Din.fieldEditor="gridpicker"
-        //% Din.fieldOptions.width=200
-        //% Din.fieldOptions.columns=3
-        //% group="Digital"
-        read_Din_value(grove: GrovePort): number {
-            this.grove = grove;
-            this.select_grove_port(0);
-            return this.Din;
-        }
+        if (Unit == DistanceUnit.cm) distance = duration * 153 / 58 / 100;
+        else distance = duration * 153 / 148 / 100;
 
-        /**
-         * read the status of a digital input
-         */
-        //% blockId=read_Din_status
-        //% block="digital pin $grove| is $high"
-        //% grove.fieldEditor="gridpicker"
-        //% grove.fieldOptions.width=200
-        //% grove.fieldOptions.columns=3
-        //% high.shadow="toggleHighLow"
-        //% high.defl="true"
-        //% group="Digital"
-        //% weight=10
-        read_Din_status(grove: GrovePort, high: boolean): boolean {
-            this.grove = grove;
-            this.select_grove_port(0);
-            if ((high == true && this.Din == 1) || (high == false && this.Din == 0)) {
-                return true;
-            } else {
-                return false;
-            }
-        }
+        if (distance > 0) distanceBackup = distance;
+        else distance = distanceBackup;
+        basic.pause(50);
 
-        /**
-        * set the status of a digital output to high or low
-        */
-        //% blockId=set_Dout
-        //% block="set digital pin $grove| to $high"
-        //% grove.fieldEditor="gridpicker"
-        //% grove.fieldOptions.width=200
-        //% grove.fieldOptions.columns=3
-        //% high.shadow="toggleHighLow"
-        //% high.defl="true"
-        //% group="Digital"
-        //% weight=10
-        set_Dout(grove: GrovePort, high: boolean) {
-            this.grove = grove;
-            this.high = high;
-            this.select_grove_port(1);
-        }
+        return distance;
+    }
 
-        /**
-        * read the analog inputs
-        */
-        //% blockId=read_Ain
-        //% block="analog read pin $analogIO"
-        //% analogIO.fieldEditor="gridpicker"
-        //% analogIO.fieldOptions.width=200
-        //% analogIO.fieldOptions.columns=3
-        //% group="Analog"
-        //% weight=50
-        read_Ain(analogIO: AnalogPort): number {
-            this.analogIO = analogIO;
-            this.select_analog_port(0);
-            return this.Ain;
-        }
+    /**
+    * read the value of a digital input
+    */
+    //% blockId=read_Din_value
+    //% block="digital read pin $grove"
+    //% Din.fieldEditor="gridpicker"
+    //% Din.fieldOptions.width=200
+    //% Din.fieldOptions.columns=3
+    //% group="Digital"
+    export function read_Din_value(grove: GrovePort): number {
+        selectPins.grove = grove;
+        selectPins.select_grove_port(0);
+        return selectPins.Din;
+    }
 
-        /**
-        * read the analog inputs and convert the value to the specified range
-        */
-        //% blockId=convert_Ain
-        //% block="map pin $analogIO|to low $low_value|high $high_value"
-        //% analogIO.fieldEditor="gridpicker"
-        //% analogIO.fieldOptions.width=200
-        //% analogIO.fieldOptions.columns=3
-        //% group="Analog"
-        //% weight=40
-        convert_Ain(analogIO: AnalogPort, low_value: number, high_value: number): number {
-            this.analogIO = analogIO;
-            this.select_analog_port(0);
-            return Math.map(this.Ain, 0, 1023, low_value, high_value);
+    /**
+     * read the status of a digital input
+     */
+    //% blockId=read_Din_status
+    //% block="digital pin $grove| is $high"
+    //% grove.fieldEditor="gridpicker"
+    //% grove.fieldOptions.width=200
+    //% grove.fieldOptions.columns=3
+    //% high.shadow="toggleHighLow"
+    //% high.defl="true"
+    //% group="Digital"
+    //% weight=10
+    export function read_Din_status(grove: GrovePort, high: boolean): boolean {
+        selectPins.grove = grove;
+        selectPins.select_grove_port(0);
+        if ((high == true && selectPins.Din == 1) || (high == false && selectPins.Din == 0)) {
+            return true;
+        } else {
+            return false;
         }
+    }
 
-        /**
-        * write value to the analog ports
-        */
-        //% blockId=write_analog
-        //% block="analog write pin $analogIO| to $Aout"
-        //% analogIO.fieldEditor="gridpicker"
-        //% analogIO.fieldOptions.width=200
-        //% analogIO.fieldOptions.columns=3
-        //% Aout.min=0 value.max=1023
-        //% Aout.defl=1023
-        //% group="Analog"
-        //% weight=30
-        write_analog(analogIO: AnalogPort, Aout: number) {
-            this.analogIO = analogIO;
-            this.Aout = Aout;
-            this.select_analog_port(1);
-        }
+    /**
+    * set the status of a digital output to high or low
+    */
+    //% blockId=set_Dout
+    //% block="set digital pin $grove| to $high"
+    //% grove.fieldEditor="gridpicker"
+    //% grove.fieldOptions.width=200
+    //% grove.fieldOptions.columns=3
+    //% high.shadow="toggleHighLow"
+    //% high.defl="true"
+    //% group="Digital"
+    //% weight=10
+    export function set_Dout(grove: GrovePort, high: boolean) {
+        selectPins.grove = grove;
+        selectPins.high = high;
+        selectPins.select_grove_port(1);
+    }
 
-        /**
-        * Configure the period of Pulse Width Modulation (PWM) on the specified analog pin to a given value in "microseconds". Before you call this function, you should set the specified pin as analog output using "analog write pin".
-        */
-        //% blockId=config_PWM
-        //% block="analog set period pin $analogIO|(PWM) to (us) $PWMvalue"
-        //% analogIO.fieldEditor="gridpicker"
-        //% analogIO.fieldOptions.width=200
-        //% analogIO.fieldOptions.columns=3
-        //% PWMvalue.defl=20000
-        //% group="Analog"
-        //% weight=20
-        config_PWM(analogIO: AnalogPort, PWMvalue: number) {
-            this.analogIO = analogIO;
-            this.PWMvalue = PWMvalue;
-            this.select_analog_port(2);
-        }
+    /**
+    * read the analog inputs
+    */
+    //% blockId=read_Ain
+    //% block="analog read pin $analogIO"
+    //% analogIO.fieldEditor="gridpicker"
+    //% analogIO.fieldOptions.width=200
+    //% analogIO.fieldOptions.columns=3
+    //% group="Analog"
+    //% weight=50
+    export function read_Ain(analogIO: AnalogPort): number {
+        selectPins.analogIO = analogIO;
+        selectPins.select_analog_port(0);
+        return selectPins.Ain;
+    }
+
+    /**
+    * read the analog inputs and convert the value to the specified range
+    */
+    //% blockId=convert_Ain
+    //% block="map pin $analogIO|to low $low_value|high $high_value"
+    //% analogIO.fieldEditor="gridpicker"
+    //% analogIO.fieldOptions.width=200
+    //% analogIO.fieldOptions.columns=3
+    //% group="Analog"
+    //% weight=40
+    export function convert_Ain(analogIO: AnalogPort, low_value: number, high_value: number): number {
+        selectPins.analogIO = analogIO;
+        selectPins.select_analog_port(0);
+        return Math.map(selectPins.Ain, 0, 1023, low_value, high_value);
+    }
+
+    /**
+    * write value to the analog ports
+    */
+    //% blockId=write_analog
+    //% block="analog write pin $analogIO| to $Aout"
+    //% analogIO.fieldEditor="gridpicker"
+    //% analogIO.fieldOptions.width=200
+    //% analogIO.fieldOptions.columns=3
+    //% Aout.min=0 value.max=1023
+    //% Aout.defl=1023
+    //% group="Analog"
+    //% weight=30
+    export function write_analog(analogIO: AnalogPort, Aout: number) {
+        selectPins.analogIO = analogIO;
+        selectPins.Aout = Aout;
+        selectPins.select_analog_port(1);
+    }
+
+    /**
+    * Configure the period of Pulse Width Modulation (PWM) on the specified analog pin to a given value in "microseconds". Before you call this function, you should set the specified pin as analog output using "analog write pin".
+    */
+    //% blockId=config_PWM
+    //% block="analog set period pin $analogIO|(PWM) to (us) $PWMvalue"
+    //% analogIO.fieldEditor="gridpicker"
+    //% analogIO.fieldOptions.width=200
+    //% analogIO.fieldOptions.columns=3
+    //% PWMvalue.defl=20000
+    //% group="Analog"
+    //% weight=20
+    export function config_PWM(analogIO: AnalogPort, PWMvalue: number) {
+        selectPins.analogIO = analogIO;
+        selectPins.PWMvalue = PWMvalue;
+        selectPins.select_analog_port(2);
     }
 
     /**
