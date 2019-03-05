@@ -145,11 +145,6 @@ namespace BitTest {
     */
     //% blockId=measureInCentimeters
     //% block="Ultrasonic Sensor at $grove| distance in $Unit"
-    //% grove.fieldEditor="gridpicker"
-    //% grove.fieldOptions.width=200
-    //% grove.fieldOptions.columns=3
-    //% Unit.fieldEditor="gridpicker"
-    //% Unit.fieldOptions.width=200
     //% group="Grove Modules"
     //% weight=100
     export function measureInCentimeters(grove: GrovePort, Unit: DistanceUnit): number {
@@ -195,9 +190,6 @@ namespace BitTest {
     */
     //% blockId=read_Din_value
     //% block="digital read pin $grove"
-    //% Din.fieldEditor="gridpicker"
-    //% Din.fieldOptions.width=200
-    //% Din.fieldOptions.columns=3
     //% group="Digital"
     export function read_Din_value(grove: GrovePort): number {
         selectPins.grove = grove;
@@ -210,9 +202,6 @@ namespace BitTest {
      */
     //% blockId=read_Din_status
     //% block="digital pin $grove| is $high"
-    //% grove.fieldEditor="gridpicker"
-    //% grove.fieldOptions.width=200
-    //% grove.fieldOptions.columns=3
     //% high.shadow="toggleHighLow"
     //% high.defl="true"
     //% group="Digital"
@@ -232,9 +221,6 @@ namespace BitTest {
     */
     //% blockId=set_Dout
     //% block="set digital pin $grove| to $high"
-    //% grove.fieldEditor="gridpicker"
-    //% grove.fieldOptions.width=200
-    //% grove.fieldOptions.columns=3
     //% high.shadow="toggleHighLow"
     //% high.defl="true"
     //% group="Digital"
@@ -249,10 +235,7 @@ namespace BitTest {
     * read the analog inputs
     */
     //% blockId=read_Ain
-    //% block="analog read pin $analogIO"
-    //% analogIO.fieldEditor="gridpicker"
-    //% analogIO.fieldOptions.width=200
-    //% analogIO.fieldOptions.columns=3
+    //% block="analog read pin $analogIO|"
     //% group="Analog"
     //% weight=50
     export function read_Ain(analogIO: AnalogPort): number {
@@ -266,9 +249,6 @@ namespace BitTest {
     */
     //% blockId=convert_Ain
     //% block="map pin $analogIO|to low $low_value|high $high_value"
-    //% analogIO.fieldEditor="gridpicker"
-    //% analogIO.fieldOptions.width=200
-    //% analogIO.fieldOptions.columns=3
     //% group="Analog"
     //% weight=40
     export function convert_Ain(analogIO: AnalogPort, low_value: number, high_value: number): number {
@@ -281,10 +261,7 @@ namespace BitTest {
     * write value to the analog ports
     */
     //% blockId=write_analog
-    //% block="analog write pin $analogIO| to $Aout"
-    //% analogIO.fieldEditor="gridpicker"
-    //% analogIO.fieldOptions.width=200
-    //% analogIO.fieldOptions.columns=3
+    //% block="analog write pin $analogIO| to $value"
     //% value.min=0 value.max=1023
     //% value.defl=1023
     //% group="Analog"
@@ -300,9 +277,6 @@ namespace BitTest {
     */
     //% blockId=config_PWM
     //% block="analog set period pin $analogIO|(PWM) to (us) $PWMvalue"
-    //% analogIO.fieldEditor="gridpicker"
-    //% analogIO.fieldOptions.width=200
-    //% analogIO.fieldOptions.columns=3
     //% PWMvalue.defl=20000
     //% group="Analog"
     //% weight=20
