@@ -235,7 +235,7 @@ namespace BitTest {
     * read the analog inputs
     */
     //% blockId=read_Ain
-    //% block="analog read pin $analogIO|"
+    //% block="analog read pin $analogIO"
     //% group="Analog"
     //% weight=50
     export function read_Ain(analogIO: AnalogPort): number {
