@@ -7,6 +7,8 @@ enum GrovePort {
     P2,
     //% block="P8"
     P8,
+    //% block="P12"
+    P12,
     //% block="P16"
     P16
 }
@@ -57,7 +59,9 @@ namespace BitTest {
                     this.Din = pins.digitalReadPin(DigitalPin.P2);
                 } else if (this.grove == GrovePort.P8) {
                     this.Din = pins.digitalReadPin(DigitalPin.P8);
-                } else if (this.grove == GrovePort.P16) {
+                } else if (this.grove == GrovePort.P12) {
+                    this.Din = pins.digitalReadPin(DigitalPin.P12);
+                }else if (this.grove == GrovePort.P16) {
                     this.Din = pins.digitalReadPin(DigitalPin.P16);
                 }
             }
@@ -76,7 +80,9 @@ namespace BitTest {
                     pins.digitalWritePin(DigitalPin.P2, this.Dout);
                 } else if (this.grove == GrovePort.P8) {
                     pins.digitalWritePin(DigitalPin.P8, this.Dout);
-                } else if (this.grove == GrovePort.P16) {
+                } else if (this.grove == GrovePort.P12) {
+                    pins.digitalWritePin(DigitalPin.P12, this.Dout);
+                }else if (this.grove == GrovePort.P16) {
                     pins.digitalWritePin(DigitalPin.P16, this.Dout);
                 }
             }
@@ -95,6 +101,8 @@ namespace BitTest {
                     pins.digitalWritePin(DigitalPin.P2, this.Dout);
                 } else if (this.grove == GrovePort.P8) {
                     pins.digitalWritePin(DigitalPin.P8, this.Dout);
+                } else if (this.grove == GrovePort.P12) {
+                    pins.digitalWritePin(DigitalPin.P12, this.Dout);
                 } else if (this.grove == GrovePort.P16) {
                     pins.digitalWritePin(DigitalPin.P16, this.Dout);
                 }
@@ -171,7 +179,9 @@ namespace BitTest {
             duration = pins.pulseIn(DigitalPin.P2, PulseValue.High, 50000);
         } else if (selectPins.grove == GrovePort.P8) {
             duration = pins.pulseIn(DigitalPin.P8, PulseValue.High, 50000);
-        } else if (selectPins.grove == GrovePort.P16) {
+        } else if (selectPins.grove == GrovePort.P12) {
+            duration = pins.pulseIn(DigitalPin.P12, PulseValue.High, 50000);
+        }else if (selectPins.grove == GrovePort.P16) {
             duration = pins.pulseIn(DigitalPin.P16, PulseValue.High, 50000);
         }
 
