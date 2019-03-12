@@ -5,7 +5,8 @@
     "dependencies": {
         "core": "*",
         "radio": "*",
-        "neopixel": "github:microsoft/pxt-neopixel#v0.6.10"
+        "neopixel": "github:microsoft/pxt-neopixel#v0.6.10".
+        "pxt-bitplayer": "github:MiroChao/pxt-BitPlayer"
     },
     "files": [
         "README.md",
