@@ -6,7 +6,17 @@
         "core": "*",
         "radio": "*",
         "neopixel": "github:microsoft/pxt-neopixel#v0.6.10",
-        "pxt-bitplayer": "github:MiroChao/pxt-BitPlayer"
+        "pxt-bitplayer": "github:MiroChao/pxt-BitPlayer",
+        "buttons": "file:../buttons",
+        "accelerometer": "file:../accelerometer",
+        "lightsensor": "file:../lightsensor",
+        "thermometer": "file:../thermometer",
+        "music": "file:../music",
+        "light": "file:../light",
+        "switch": "file:../switch",
+        "infrared": "file:../infrared",
+        "microphone": "file:../microphone",
+        "touch": "file:../touch"
     },
     "files": [
         "README.md",
